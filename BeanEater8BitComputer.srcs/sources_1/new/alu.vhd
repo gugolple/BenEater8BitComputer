@@ -78,7 +78,7 @@ adder_of_register_a_b: for i in 0 to constants.bit_width -1 generate
  flag_carry <= adder_carry_vector(constants.bit_width);
  
  -- For the zero flag we generate and adder 
- flag_zero <= and(output);
+ flag_zero <= not(or(output));
 
 end generate;
 
