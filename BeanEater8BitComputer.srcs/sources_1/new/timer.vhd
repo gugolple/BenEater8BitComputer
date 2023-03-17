@@ -31,7 +31,6 @@ entity timer is
 end timer;
 
 architecture Behavioral of timer is
-    signal local_clk : std_logic := '0';
 begin
     clk_out <= clk and enable;
 end Behavioral;
