@@ -30,13 +30,10 @@ entity full_adder is
 end full_adder;
 
 architecture Behavioral of full_adder is
-signal intermediate : std_logic;
 begin
 
-intermediate <= bit_a xor bit_b;
+output_bit <= (bit_a xor bit_b) xor bit_carry;
 
-output_bit <= intermediate xor bit_carry;
-
-output_carry <= (bit_a and bit_b) or (intermediate and bit_carry);
+output_carry <= (bit_a and bit_b) or ((bit_a xor bit_b) and bit_carry);
 
 end Behavioral;
