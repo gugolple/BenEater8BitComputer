@@ -8,6 +8,9 @@
 -- Description: This module will be a program counter, increasing each rising 
 --     edge of the clock pulse, with reset and with the ability to set it to
 --     any desired value by input.
+--
+--     It triggers on falling edge as any device that needs reading from the
+--     bus, as to allow time to the signals to stabilize.
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
@@ -28,6 +31,7 @@ entity program_counter is
     );
     Port (
         clk : in std_logic;
+        enable : in std_logic;
         set : in std_logic;
         reset : in std_logic;
         in_counter : in std_logic_vector(bit_size -1 downto 0);
@@ -44,10 +48,11 @@ process(reset,clk) is
 begin
     if reset = '1' then
         count := (others => '0');
+    -- It triggers on falling edge
     elsif falling_edge(clk) then
         if set = '1' then
             count := unsigned(in_counter);
-        else
+        elsif enable = '1' then
             count := count + 1;
         end if;
     end if;

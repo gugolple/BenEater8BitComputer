@@ -39,6 +39,7 @@ component program_counter is
     );
     Port (
         clk : in std_logic;
+        enable : in std_logic;
         set : in std_logic;
         reset : in std_logic;
         in_counter : in std_logic_vector(bit_size -1 downto 0);
@@ -46,7 +47,7 @@ component program_counter is
     );
 end component;
     constant max_val : integer := 2 ** bit_size;
-    signal clk, set, reset : std_logic;
+    signal clk, enable, set, reset : std_logic;
     signal in_counter : std_logic_vector(bit_size -1 downto 0);
     signal out_counter : std_logic_vector(bit_size -1 downto 0);
 begin
@@ -56,6 +57,7 @@ program_counter_instance : program_counter
     Port map(
         clk => clk,
         set => set,
+        enable => enable,
         reset => reset,
         in_counter => in_counter,
         out_counter => out_counter
@@ -68,6 +70,7 @@ begin
     -- Loop a couple of iterations
     for num_loop_count in 0 to iterations loop
         -- Initialize program counter specifics
+        enable <= '1';
         set <= '0';
         in_counter <= (others => '0');
         -- Initialize element by pulsing a clock.
@@ -76,9 +79,9 @@ begin
         wait for constants.period;
         clk <= '1';
         wait for constants.period;
-        reset <= '0';
         clk <= '0';
         wait for constants.period;
+        reset <= '0';
         
         -- Test full loop of element
         for i in 0 to max_val -1 loop
@@ -125,6 +128,33 @@ begin
                 & integer'image(to_integer(signed(out_counter)))
                 severity error;
         end loop;
+        set <= '0';
+        
+        
+        -- Reinitialize element by pulsing a clock.
+        reset <= '1';
+        enable <= '0';
+        clk <= '0';
+        wait for constants.period;
+        clk <= '1';
+        wait for constants.period;
+        reset <= '0';
+        clk <= '0';
+        wait for constants.period;
+        
+        -- Test full loop of element without enable
+        for i in 0 to max_val -1 loop
+            assert (std_logic_vector(to_unsigned(0,bit_size)) = out_counter) 
+                report "Error in counter at cycle " 
+                & integer'image(i) & " value read "
+                & integer'image(to_integer(signed(out_counter)))
+                severity error;
+            clk <= '1';
+            wait for constants.period;
+            clk <= '0';
+            wait for constants.period;
+        end loop;
+        enable <= '1';
     end loop;
     wait;
 end process;
