@@ -56,7 +56,7 @@ alu_instance : alu port map (
 tb1 : process
     use IEEE.math_real.all;
     use IEEE.numeric_std.all;
-    constant period: time := 20 ns;
+    use work.constants;
     constant max_val : integer := 2 ** constants.bit_width;
     variable calculated_flag_zero : std_logic;
     variable resulting_flag_zero : std_logic;
@@ -75,7 +75,7 @@ begin
             substraction  <= '0';
             
             -- Check correct results for addition
-            wait for period;
+            wait for constants.period;
             assert (output = std_logic_vector(to_unsigned(
                     ((reg_a + reg_b) mod max_val), constants.bit_width))
                 )
@@ -115,7 +115,7 @@ begin
             substraction  <= '1';
             
             -- Check correct results for substraction
-            wait for period;
+            wait for constants.period;
             assert (output = std_logic_vector(to_unsigned(
                 ((reg_a - reg_b) mod max_val), constants.bit_width))
             )
