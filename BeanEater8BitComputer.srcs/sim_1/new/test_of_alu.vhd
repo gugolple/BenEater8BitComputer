@@ -83,33 +83,33 @@ begin
                     & integer'image(reg_a) & " + " & integer'image(reg_b)
                     severity error;
                 
---            -- Check the zero flag
---            if (reg_a + reg_b) = 0 then
---                calculated_flag_zero := '1';
---            else
---                calculated_flag_zero := '0';
---            end if;
---            assert (To_bit(flag_zero) and To_bit(calculated_flag_zero))
---                report "flag zero test failed for addition " 
---                    & integer'image(reg_a)  & " + " 
---                    & integer'image(reg_b) & " value " 
---                    & boolean'image(flag_zero) & " gotten "
---                    & boolean'image(calculated_flag_zero)
---                    severity error;
+            -- Check the zero flag
+            if (reg_a + reg_b) = 0 then
+                calculated_flag_zero := '1';
+            else
+                calculated_flag_zero := '0';
+            end if;
+            assert (flag_zero = calculated_flag_zero)
+                report "flag zero test failed for addition " 
+                    & integer'image(reg_a)  & " + " 
+                    & integer'image(reg_b) & " value " 
+                    & std_logic'image(flag_zero) & " gotten "
+                    & std_logic'image(calculated_flag_zero)
+                    severity error;
                 
---            -- Check the carry flag
---            if (reg_a + reg_b) >= max_val then
---                calculated_flag_carry := '1';
---            else
---                calculated_flag_carry := '0';
---            end if;
---            assert (To_bit(flag_carry) and To_bit(calculated_flag_carry))
---                report "flag carry test failed for addition " 
---                    & integer'image(reg_a)  & " + " 
---                    & integer'image(reg_b) & " value " 
---                    & boolean'image(flag_carry) & " gotten "
---                    & boolean'image(calculated_flag_carry)
---                    severity error;
+            -- Check the carry flag
+            if (reg_a + reg_b) >= max_val then
+                calculated_flag_carry := '1';
+            else
+                calculated_flag_carry := '0';
+            end if;
+            assert (flag_carry = calculated_flag_carry)
+                report "flag carry test failed for addition " 
+                    & integer'image(reg_a)  & " + " 
+                    & integer'image(reg_b) & " value " 
+                    & std_logic'image(flag_carry) & " gotten "
+                    & std_logic'image(calculated_flag_carry)
+                    severity error;
             
             -- Set to substraction
             substraction  <= '1';
@@ -124,33 +124,33 @@ begin
                     & integer'image(reg_b) 
                     severity error;
                 
---            -- Check the zero flag
---            if (reg_a - reg_b) = 0 then
---                calculated_flag_zero := '1';
---            else
---                calculated_flag_zero := '0';
---            end if;
---            assert (To_bit(flag_zero) and To_bit(calculated_flag_zero))
---                report "flag zero test failed for substraction " 
---                    & integer'image(reg_a)  & " - " 
---                    & integer'image(reg_b) & " value " 
---                    & boolean'image(flag_zero) & " gotten "
---                    & boolean'image(calculated_flag_zero)
---                    severity error;
+            -- Check the zero flag
+            if ((reg_a + reg_b + 1) mod max_val) = 0 then
+                calculated_flag_zero := '1';
+            else
+                calculated_flag_zero := '0';
+            end if;
+            assert (flag_zero = calculated_flag_zero)
+                report "flag zero test failed for substraction " 
+                    & integer'image(reg_a)  & " - " 
+                    & integer'image(reg_b) & " value " 
+                    & std_logic'image(flag_zero) & " gotten "
+                    & std_logic'image(calculated_flag_zero)
+                    severity error;
                 
---            -- Check the carry flag
---            if (reg_a + reg_b + 1) >= max_val then
---                calculated_flag_carry := '1';
---            else
---                calculated_flag_carry := '0';
---            end if;
---            assert (To_bit(flag_carry) and To_bit(calculated_flag_carry))
---                report "flag carry test failed for substraction " 
---                    & integer'image(reg_a)  & " - " 
---                    & integer'image(reg_b) & " value " 
---                    & boolean'image(flag_carry) & " gotten "
---                    & boolean'image(calculated_flag_carry)
---                    severity error;
+            -- Check the carry flag
+            if (reg_a + reg_b + 1) >= max_val then
+                calculated_flag_carry := '1';
+            else
+                calculated_flag_carry := '0';
+            end if;
+            assert (flag_carry = calculated_flag_carry)
+                report "flag carry test failed for substraction " 
+                    & integer'image(reg_a)  & " - " 
+                    & integer'image(reg_b) & " value " 
+                    & std_logic'image(flag_carry) & " gotten "
+                    & std_logic'image(calculated_flag_carry)
+                    severity error;
         end loop;
     end loop;
     wait; -- indefinitely suspend process
