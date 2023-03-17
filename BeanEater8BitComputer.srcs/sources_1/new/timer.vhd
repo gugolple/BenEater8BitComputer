@@ -23,8 +23,8 @@ entity timer is
   Port (
     -- clk is the crystal oscillator
     clk : in std_logic;
-    -- enable signal to stop the clock
-    enable: in std_logic;
+    -- halt signal, to stop the clock
+    halt : in std_logic;
     -- clk output from the control unit
     clk_out : out std_logic
    );
@@ -32,5 +32,5 @@ end timer;
 
 architecture Behavioral of timer is
 begin
-    clk_out <= clk and enable;
+    clk_out <= clk and not(halt);
 end Behavioral;
