@@ -44,7 +44,7 @@ process(reset,clk) is
 begin
     if reset = '1' then
         count := (others => '0');
-    elsif rising_edge(clk) then
+    elsif falling_edge(clk) then
         if set = '1' then
             count := unsigned(in_counter);
         else
