@@ -84,7 +84,7 @@ begin
                     severity error;
                 
             -- Check the zero flag
-            if (reg_a + reg_b) = 0 then
+            if ((reg_a + reg_b) mod max_val) = 0 then
                 calculated_flag_zero := '1';
             else
                 calculated_flag_zero := '0';
@@ -125,7 +125,7 @@ begin
                     severity error;
                 
             -- Check the zero flag
-            if ((reg_a + reg_b + 1) mod max_val) = 0 then
+            if ((reg_a + max_val - 1 - reg_b + 1) mod max_val) = 0 then
                 calculated_flag_zero := '1';
             else
                 calculated_flag_zero := '0';
@@ -139,7 +139,7 @@ begin
                     severity error;
                 
             -- Check the carry flag
-            if (reg_a + reg_b + 1) >= max_val then
+            if (reg_a + max_val - 1 - reg_b + 1) >= max_val then
                 calculated_flag_carry := '1';
             else
                 calculated_flag_carry := '0';
