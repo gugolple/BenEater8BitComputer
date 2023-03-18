@@ -34,8 +34,10 @@ entity control_unit is
             alu_flag_carry : in std_logic;
     -- Output signals
         -- Main CPU signals
-            reset : out std_logic;
+            soft_reset : out std_logic;
             halt : out std_logic;
+            -- Set the ALU to substraction mode
+            alu_substraction : out std_logic;
         -- BUS transfer signals
             -- From ram into the bus
             ram_in : out std_logic;
@@ -44,28 +46,25 @@ entity control_unit is
             -- From bus into ram address
             ram_address : out std_logic;
             -- From bus into intruction register
-            register_instruction_in : out std_logic;
+            register_instruction_out : out std_logic;
             -- From bus into register A
-            register_a_in : out std_logic;
-            -- From register A into bus
             register_a_out : out std_logic;
+            -- From register A into bus
+            register_a_in : out std_logic;
             -- From bus into register B
-            register_b_in : out std_logic;
+            register_b_out : out std_logic;
             -- From bus into register OUTPUT
-            register_output_in : out std_logic;
+            register_output_out : out std_logic;
             -- Set program counter to program counter register
             jump : out std_logic;
             -- Advance program counter
             program_counter_advance : out std_logic;
             -- From bus into program counter
-            program_counter_in : out std_logic;
-            -- From program counter into bus
             program_counter_out : out std_logic;
+            -- From program counter into bus
+            program_counter_in : out std_logic;
             -- From alu into bus
-            alu_in : out std_logic;
-        -- CPU control signals
-            -- Set the ALU to substraction mode
-            alu_substraction : out std_logic
+            alu_in : out std_logic
     );
 end control_unit;
 
@@ -73,7 +72,6 @@ architecture Behavioral of control_unit is
 begin
 
 process (clk) is
-    
 begin
 
 end process;

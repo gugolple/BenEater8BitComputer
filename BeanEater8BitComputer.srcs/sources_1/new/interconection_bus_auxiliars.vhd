@@ -186,15 +186,18 @@ entity registered_control_unit is
         clk : in std_logic;
         load : in std_logic;
         data_in : in std_logic_vector(bit_size -1 downto 0);
-        -- CPU control signals
-            -- Get alu flags for flow control
-            alu_flag_zero : in std_logic;
-            alu_flag_carry : in std_logic;
     -- Control unit part
+        -- Input signals
+            -- CPU control signals
+                -- Get alu flags for flow control
+                alu_flag_zero : in std_logic;
+                alu_flag_carry : in std_logic;
         -- Output signals
             -- Main CPU signals
-                reset : out std_logic;
+                soft_reset : out std_logic;
                 halt : out std_logic;
+                -- Set the ALU to substraction mode
+                alu_substraction : out std_logic;
             -- BUS transfer signals
                 -- From ram into the bus
                 ram_in : out std_logic;
@@ -203,28 +206,25 @@ entity registered_control_unit is
                 -- From bus into ram address
                 ram_address : out std_logic;
                 -- From bus into intruction register
-                register_instruction_in : out std_logic;
+                register_instruction_out : out std_logic;
                 -- From bus into register A
-                register_a_in : out std_logic;
-                -- From register A into bus
                 register_a_out : out std_logic;
+                -- From register A into bus
+                register_a_in : out std_logic;
                 -- From bus into register B
-                register_b_in : out std_logic;
+                register_b_out : out std_logic;
                 -- From bus into register OUTPUT
-                register_output_in : out std_logic;
+                register_output_out : out std_logic;
                 -- Set program counter to program counter register
                 jump : out std_logic;
                 -- Advance program counter
                 program_counter_advance : out std_logic;
                 -- From bus into program counter
-                program_counter_in : out std_logic;
-                -- From program counter into bus
                 program_counter_out : out std_logic;
+                -- From program counter into bus
+                program_counter_in : out std_logic;
                 -- From alu into bus
-                alu_in : out std_logic;
-            -- CPU control signals
-                -- Set the ALU to substraction mode
-                alu_substraction : out std_logic
+                alu_in : out std_logic
     );
 end registered_control_unit;
 
@@ -253,8 +253,10 @@ component control_unit is
             alu_flag_carry : in std_logic;
     -- Output signals
         -- Main CPU signals
-            reset : out std_logic;
+            soft_reset : out std_logic;
             halt : out std_logic;
+            -- Set the ALU to substraction mode
+            alu_substraction : out std_logic;
         -- BUS transfer signals
             -- From ram into the bus
             ram_in : out std_logic;
@@ -263,28 +265,25 @@ component control_unit is
             -- From bus into ram address
             ram_address : out std_logic;
             -- From bus into intruction register
-            register_instruction_in : out std_logic;
+            register_instruction_out : out std_logic;
             -- From bus into register A
-            register_a_in : out std_logic;
-            -- From register A into bus
             register_a_out : out std_logic;
+            -- From register A into bus
+            register_a_in : out std_logic;
             -- From bus into register B
-            register_b_in : out std_logic;
+            register_b_out : out std_logic;
             -- From bus into register OUTPUT
-            register_output_in : out std_logic;
+            register_output_out : out std_logic;
             -- Set program counter to program counter register
             jump : out std_logic;
             -- Advance program counter
             program_counter_advance : out std_logic;
             -- From bus into program counter
-            program_counter_in : out std_logic;
-            -- From program counter into bus
             program_counter_out : out std_logic;
+            -- From program counter into bus
+            program_counter_in : out std_logic;
             -- From alu into bus
-            alu_in : out std_logic;
-        -- CPU control signals
-            -- Set the ALU to substraction mode
-            alu_substraction : out std_logic
+            alu_in : out std_logic
     );
 end component;
 
@@ -312,8 +311,10 @@ control_unit_instance : control_unit
             alu_flag_carry => alu_flag_carry,
     -- Output signals
         -- Main CPU signals
-            reset => reset,
+            soft_reset => soft_reset,
             halt => halt,
+            -- Set the ALU to substraction mode
+            alu_substraction => alu_substraction,
         -- BUS transfer signals
             -- From ram into the bus
             ram_in => ram_in,
@@ -322,28 +323,25 @@ control_unit_instance : control_unit
             -- From bus into ram address
             ram_address => ram_address,
             -- From bus into intruction register
-            register_a_in => register_a_in,
+            register_instruction_out => register_instruction_out,
             -- From bus into register A
-            register_instruction_in => register_instruction_in,
-            -- From register A into bus
             register_a_out => register_a_out,
+            -- From register A into bus
+            register_a_in => register_a_in,
             -- From bus into register B
-            register_b_in => register_b_in,
+            register_b_out => register_b_out,
             -- From bus into register OUTPUT
-            register_output_in => register_output_in,
+            register_output_out => register_output_out,
             -- Set program counter to program counter register
             jump => jump,
             -- Advance program counter
             program_counter_advance => program_counter_advance,
             -- From bus into program counter
-            program_counter_in => program_counter_in,
-            -- From program counter into bus
             program_counter_out => program_counter_out,
+            -- From program counter into bus
+            program_counter_in => program_counter_in,
             -- From alu into bus
-            alu_in => alu_in,
-        -- CPU control signals
-            -- Set the ALU to substraction mode
-            alu_substraction => alu_substraction
+            alu_in => alu_in
     );
 
 end Behavioral;

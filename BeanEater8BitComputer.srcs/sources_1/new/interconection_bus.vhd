@@ -52,7 +52,6 @@ component registered_program_counter is
         out_counter : out std_logic_vector(bit_size -1 downto 0)
     );
 end component;
-signal data_to_program_counter : std_logic_vector(bit_size -1 downto 0);
 signal data_from_program_counter : std_logic_vector(bit_size -1 downto 0);
 
 -- Main memory module
@@ -70,7 +69,6 @@ component registered_main_memory is
         douta : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 end component;
-signal data_to_main_memory : std_logic_vector(bit_size -1 downto 0);
 signal data_from_main_memory : std_logic_vector(bit_size -1 downto 0);
 
 -- Alu module
@@ -93,9 +91,7 @@ component registered_alu is
         output : inout std_logic_vector(constants.bit_width -1 downto 0)
     );
 end component;
-signal data_to_register_a : std_logic_vector(bit_size -1 downto 0);
 signal data_from_register_a : std_logic_vector(bit_size -1 downto 0);
-signal data_to_register_b : std_logic_vector(bit_size -1 downto 0);
 signal data_from_alu : std_logic_vector(bit_size -1 downto 0);
 
 -- Control unit module
@@ -108,15 +104,18 @@ component registered_control_unit is
         clk : in std_logic;
         load : in std_logic;
         data_in : in std_logic_vector(bit_size -1 downto 0);
-        -- CPU control signals
-            -- Get alu flags for flow control
-            alu_flag_zero : in std_logic;
-            alu_flag_carry : in std_logic;
     -- Control unit part
+        -- Input signals
+            -- CPU control signals
+                -- Get alu flags for flow control
+                alu_flag_zero : in std_logic;
+                alu_flag_carry : in std_logic;
         -- Output signals
             -- Main CPU signals
-                reset : out std_logic;
+                soft_reset : out std_logic;
                 halt : out std_logic;
+                -- Set the ALU to substraction mode
+                alu_substraction : out std_logic;
             -- BUS transfer signals
                 -- From ram into the bus
                 ram_in : out std_logic;
@@ -125,28 +124,25 @@ component registered_control_unit is
                 -- From bus into ram address
                 ram_address : out std_logic;
                 -- From bus into intruction register
-                register_instruction_in : out std_logic;
+                register_instruction_out : out std_logic;
                 -- From bus into register A
-                register_a_in : out std_logic;
-                -- From register A into bus
                 register_a_out : out std_logic;
+                -- From register A into bus
+                register_a_in : out std_logic;
                 -- From bus into register B
-                register_b_in : out std_logic;
+                register_b_out : out std_logic;
                 -- From bus into register OUTPUT
-                register_output_in : out std_logic;
+                register_output_out : out std_logic;
                 -- Set program counter to program counter register
                 jump : out std_logic;
                 -- Advance program counter
                 program_counter_advance : out std_logic;
                 -- From bus into program counter
-                program_counter_in : out std_logic;
-                -- From program counter into bus
                 program_counter_out : out std_logic;
+                -- From program counter into bus
+                program_counter_in : out std_logic;
                 -- From alu into bus
-                alu_in : out std_logic;
-            -- CPU control signals
-                -- Set the ALU to substraction mode
-                alu_substraction : out std_logic
+                alu_in : out std_logic
     );
 end component;
 signal data_to_control_unit : std_logic_vector(bit_size -1 downto 0); 
@@ -166,15 +162,15 @@ signal data_to_control_unit : std_logic_vector(bit_size -1 downto 0);
     -- From bus into ram address
     signal ram_address : std_logic;
     -- From bus into intruction register
-    signal register_instruction_in : std_logic;
+    signal register_instruction_out : std_logic;
     -- From bus into register A
     signal register_a_in : std_logic;
     -- From register A into bus
     signal register_a_out : std_logic;
     -- From bus into register B
-    signal register_b_in : std_logic;
+    signal register_b_out : std_logic;
     -- From bus into register OUTPUT
-    signal register_output_in : std_logic;
+    signal register_output_out : std_logic;
     -- Set program counter to program counter register
     signal jump : std_logic;
     -- Advance program counter
@@ -200,16 +196,18 @@ registered_control_unit_instance : registered_control_unit
     Port map(
     -- Register part
         clk => clk,
-        load => soft_reset,
-        data_in => data_to_control_unit,
+        load => register_instruction_out,
+        data_in => local_bus,
         -- CPU control signals
             -- Get alu flags for flow control
             alu_flag_zero => alu_flag_zero,
             alu_flag_carry => alu_flag_carry,
+            -- Set the ALU to substraction mode
+            alu_substraction => alu_substraction,
     -- Control unit part
         -- Output signals
             -- Main CPU signals
-                reset => soft_reset,
+                soft_reset => soft_reset,
                 halt => halt,
             -- BUS transfer signals
                 -- From ram into the bus
@@ -219,28 +217,25 @@ registered_control_unit_instance : registered_control_unit
                 -- From bus into ram address
                 ram_address => ram_address,
                 -- From bus into intruction register
-                register_instruction_in => register_instruction_in,
+                register_instruction_out => register_instruction_out,
                 -- From bus into register A
-                register_a_in => register_a_in,
-                -- From register A into bus
                 register_a_out => register_a_out,
+                -- From register A into bus
+                register_a_in => register_a_in,
                 -- From bus into register B
-                register_b_in => register_b_in,
+                register_b_out => register_b_out,
                 -- From bus into register OUTPUT
-                register_output_in => register_output_in,
+                register_output_out => register_output_out,
                 -- Set program counter to program counter register
                 jump => jump,
                 -- Advance program counter
                 program_counter_advance => program_counter_advance,
                 -- From bus into program counter
-                program_counter_in => program_counter_in,
-                -- From program counter into bus
                 program_counter_out => program_counter_out,
+                -- From program counter into bus
+                program_counter_in => program_counter_in,
                 -- From alu into bus
-                alu_in => alu_in,
-            -- CPU control signals
-                -- Set the ALU to substraction mode
-                alu_substraction => alu_substraction
+                alu_in => alu_in
     );
 
 registered_alu_instance : registered_alu 
@@ -249,10 +244,10 @@ registered_alu_instance : registered_alu
     -- Register part
         clk => clk,
         load_a => register_a_in,
-        register_a => data_to_register_a,
+        register_a => local_bus,
         register_a_out => data_from_register_a,
-        load_b => register_b_in,
-        register_b => data_to_register_b,
+        load_b => register_b_out,
+        register_b => local_bus,
     -- Alu part
         substraction => alu_substraction,
         flag_zero => alu_flag_zero,
@@ -266,7 +261,7 @@ registered_program_counter_instance : registered_program_counter
     -- Register part
         clk => clk,
         load => program_counter_in,
-        data_in => data_to_program_counter,
+        data_in => local_bus,
     -- Program counter part
         enable => program_counter_advance,
         set => jump,
@@ -280,10 +275,17 @@ registered_main_memory_instance : registered_main_memory
     -- Register part
         clk => clk,
         load => ram_address,
-        data_in => data_to_main_memory,
+        data_in => local_bus,
     -- Main memory part
         wea => (0 => ram_write),
         douta => data_from_main_memory
     );
+
+
+-- Set the value of the bus to the appropiate input
+local_bus <= data_from_program_counter when program_counter_in = '1' else
+            data_from_main_memory when ram_in = '1' else
+            data_from_register_a when register_a_in = '1' else
+            (others => '0');
 
 end Behavioral;
