@@ -24,8 +24,8 @@ use work.full_adder;
 entity alu is
     Port ( 
         substraction : in std_logic;
-        register_a_in : in std_logic_vector(constants.bit_width -1 downto 0);
-        register_b_in : in std_logic_vector(constants.bit_width -1 downto 0);
+        a_in : in std_logic_vector(constants.bit_width -1 downto 0);
+        b_in : in std_logic_vector(constants.bit_width -1 downto 0);
         flag_zero : out std_logic;
         flag_carry : out std_logic;
         output : inout std_logic_vector(constants.bit_width -1 downto 0)
@@ -48,24 +48,24 @@ end component;
 signal adder_carry_vector : std_logic_vector(constants.bit_width downto 0);
 
 -- Local mirror of register b for local operation
-signal register_b_used : std_logic_vector(constants.bit_width -1 downto 0);
+signal b_used : std_logic_vector(constants.bit_width -1 downto 0);
 
 begin
 -- Generation of component to XOR the B register with the NEGATE_REGISTER_FLAG
 -- for substraction operations.
-xor_of_register_b: for i in 0 to constants.bit_width -1 generate
-    register_b_used(i) <= register_b_in(i) xor substraction;
+xor_of_b: for i in 0 to constants.bit_width -1 generate
+    b_used(i) <= b_in(i) xor substraction;
 end generate;
 
 -- For addition we set first value of carry vector to the NEGATE_REGISTER_FLAG
 adder_carry_vector(0) <= substraction;
 -- We generate all the chain adders
-adder_of_register_a_b: for i in 0 to constants.bit_width -1 generate
+adder_of_a_b: for i in 0 to constants.bit_width -1 generate
     current_adder: full_adder port map (
         -- For register A is taken as is.
-        bit_a => register_a_in(i),
+        bit_a => a_in(i),
         -- For register B is used the local mirror
-        bit_b => register_b_used(i),
+        bit_b => b_used(i),
         -- The carry chain is as expected
         bit_carry => adder_carry_vector(i),
         -- We output the result of the addition directly to output

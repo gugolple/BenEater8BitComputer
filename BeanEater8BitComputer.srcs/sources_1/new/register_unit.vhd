@@ -21,18 +21,20 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 use work.constants;
 
-
 entity register_unit is
+  Generic(
+    bit_size : integer := constants.bit_width 
+  );
   Port (
     clk : in std_logic;
     load : in std_logic;
-    data_in : in std_logic_vector(constants.bit_width -1 downto 0);
-    data_out : out std_logic_vector(constants.bit_width -1 downto 0)
+    data_in : in std_logic_vector(bit_size -1 downto 0);
+    data_out : out std_logic_vector(bit_size -1 downto 0)
   );
 end register_unit;
 
 architecture Behavioral of register_unit is
-signal data_stored : std_logic_vector(constants.bit_width -1 downto 0);
+signal data_stored : std_logic_vector(bit_size -1 downto 0);
 begin
 data_out <= data_stored;
 

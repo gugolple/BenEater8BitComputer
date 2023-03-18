@@ -6,13 +6,8 @@
 -- Design Name: 
 -- Module Name: control_unit - Behavioral
 -- Project Name: BenEater8BitComputer
--- Description: The control unit will manage all IO needed for the CPU to work.
---     Due to FPGA not having a tri-state bus, all buses are required to have
---     an AND operation with their enable signal, and all of the buses be OR
---     togeather as the input.
---
---     This element will contain all others, as being the main unit and handle
---     the enabling of modules.
+-- Description: The module will contain all control signals needed for the
+--     workings of the CPU.
 --
 --     The source material for this part is the video part starting at
 --     https://www.youtube.com/watch?v=AwUirxi9eBg
@@ -29,44 +24,58 @@ use IEEE.STD_LOGIC_1164.ALL;
 use work.constants;
 
 entity control_unit is
---  Port ( );
+    Port (
+    -- Input signals
+        clk : in std_logic;
+        instruction : in std_logic_vector(constants.bit_width -1 downto 0);
+        -- CPU control signals
+            -- Get alu flags for flow control
+            alu_flag_zero : in std_logic;
+            alu_flag_carry : in std_logic;
+    -- Output signals
+        -- Main CPU signals
+            reset : out std_logic;
+            halt : out std_logic;
+        -- BUS transfer signals
+            -- From ram into the bus
+            ram_in : out std_logic;
+            -- From bus into ram
+            ram_write : out std_logic;
+            -- From bus into ram address
+            ram_address : out std_logic;
+            -- From bus into intruction register
+            register_instruction_in : out std_logic;
+            -- From bus into register A
+            register_a_in : out std_logic;
+            -- From register A into bus
+            register_a_out : out std_logic;
+            -- From bus into register B
+            register_b_in : out std_logic;
+            -- From bus into register OUTPUT
+            register_output_in : out std_logic;
+            -- Set program counter to program counter register
+            jump : out std_logic;
+            -- Advance program counter
+            program_counter_advance : out std_logic;
+            -- From bus into program counter
+            program_counter_in : out std_logic;
+            -- From program counter into bus
+            program_counter_out : out std_logic;
+            -- From alu into bus
+            alu_in : out std_logic;
+        -- CPU control signals
+            -- Set the ALU to substraction mode
+            alu_substraction : out std_logic
+    );
 end control_unit;
 
 architecture Behavioral of control_unit is
--- Main CPU signals
-    signal reset : std_logic := '0';
-    signal halt : std_logic := '0';
-
--- BUS transfer signals
-    -- In the video is said as "memory in"
-    signal rom_enable : std_logic := '0';
-    -- From ram into the bus
-    signal ram_in : std_logic := '0';
-    -- From bus into the ram
-    signal ram_out : std_logic := '0';
-    -- From bus into register A
-    signal register_a_in : std_logic := '0';
-    -- From bus into register B
-    signal register_b_in : std_logic := '0';
-    -- From bus into register OUTPUT
-    signal register_output_in : std_logic := '0';
-    -- From bus into program counter
-    signal program_counter_in : std_logic := '0';
-    -- From program counter into bus
-    signal program_counter_out : std_logic := '0';
-    -- From alu into bus
-    signal alu_in : std_logic := '0';
-
--- CPU control signals
-    -- Set the ALU to substraction mode
-    signal alu_substraction : std_logic := '0';
-    -- Set program counter register to program counter
-    signal jump : std_logic := '0';
-    
--- OUTPUT register
-    -- Output display register, to mimic what its seen in video
-    signal output_register : std_logic_vector(constants.bit_width -1 downto 0);
 begin
 
+process (clk) is
+    
+begin
+
+end process;
 
 end Behavioral;
