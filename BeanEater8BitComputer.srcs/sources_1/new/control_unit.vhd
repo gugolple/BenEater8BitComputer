@@ -132,7 +132,7 @@ architecture Behavioral of control_unit is
     end record;
     
 -- Common intruction definitions ----------------------------------------------
-    constant common_operation_count : integer := 3;
+    constant common_operation_count : integer := 2;
     -- Common instruction states
     type type_common_instruction_control is 
         array (0 to common_operation_count-1) of control_array;
@@ -158,15 +158,6 @@ architecture Behavioral of control_unit is
                 external => (
                     ram_in => '1',
                     register_instruction_out => '1',
-                    others => '0'
-                )
-            ),
-           -- Advance program counter
-            2 => (
-                internal => (
-                    others => '0'
-                ),
-                external => (
                     program_counter_advance => '1',
                     others => '0'
                 )

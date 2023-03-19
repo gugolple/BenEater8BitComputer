@@ -1,16 +1,12 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: MyOwnBoredom
+-- Engineer: Gugolple
 -- 
 -- Create Date: 03/19/2023 11:18:06 AM
 -- Design Name: 
 -- Module Name: top_unit - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
+-- Description: This module will connect the IO from the FPGA to out system
+--     module.
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
