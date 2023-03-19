@@ -19,5 +19,6 @@ use ieee.numeric_std.all;
 
 package constants is
     constant bit_width : integer := 8;
+    constant instruction_width : integer := 4;
     constant period: time := 20 ns;
 end constants;

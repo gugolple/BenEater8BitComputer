@@ -69,6 +69,28 @@ entity control_unit is
 end control_unit;
 
 architecture Behavioral of control_unit is
+    constant instruction_count : integer := 8;
+    type instruction_array is array (0 to instruction_count-1) of 
+        std_logic_vector(constants.instruction_width -1 downto 0);
+    signal instruction_set : instruction_array := (
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000",
+        "0000"
+    );
+    constant max_steps : integer := 4;
+    constant external_control_outputs : integer := 16;
+    constant internal_control_outputs : integer := 1;
+    constant total_control_outputs : integer :=
+        external_control_outputs + internal_control_outputs;
+    type control_array is array (integer range <>) of 
+        std_logic_vector(total_control_outputs -1 downto 0);
+    type instructions_control_array is 
+        array (0 to instruction_count-1) of control_array(0 to max_steps -1);
 begin
 
 process (clk) is

@@ -23,6 +23,8 @@ entity timer is
   Port (
     -- clk is the crystal oscillator
     clk : in std_logic;
+    -- step
+    step : in std_logic;
     -- halt signal, to stop the clock
     halt : in std_logic;
     -- clk output from the control unit
