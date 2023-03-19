@@ -46,11 +46,11 @@ begin
 process(reset,clk) is
     variable count : unsigned(bit_size -1 downto 0) := (others => '0');
 begin
-    if reset = '1' then
-        count := (others => '0');
     -- It triggers on falling edge
-    elsif falling_edge(clk) then
-        if set = '1' then
+    if falling_edge(clk) then    
+        if reset = '1' then
+            count := (others => '0');
+        elsif set = '1' then
             count := unsigned(in_counter);
         elsif enable = '1' then
             count := count + 1;

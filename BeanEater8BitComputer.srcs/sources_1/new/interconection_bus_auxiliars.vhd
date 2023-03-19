@@ -29,12 +29,12 @@ entity registered_program_counter is
     Port(
     -- Register part
         clk : in std_logic;
+        reset : in std_logic;
         load : in std_logic;
         data_in : in std_logic_vector(bit_size -1 downto 0);
     -- Program counter part
         enable : in std_logic;
         set : in std_logic;
-        reset : in std_logic;
         out_counter : out std_logic_vector(bit_size -1 downto 0)
     );
 end registered_program_counter;
@@ -47,6 +47,7 @@ component register_unit is
   );
   Port (
     clk : in std_logic;
+    reset : in std_logic;
     load : in std_logic;
     data_in : in std_logic_vector(bit_size -1 downto 0);
     data_out : out std_logic_vector(bit_size -1 downto 0)
@@ -77,6 +78,7 @@ register_unit_instance : register_unit
     Generic map (bit_size => bit_size)
     Port map(
         clk => clk,
+        reset => reset,
         load => load,
         data_in => data_in,
         data_out => internal_data_bus
@@ -113,6 +115,7 @@ entity registered_main_memory is
     Port(
     -- Register part
         clk : in std_logic;
+        reset : in std_logic;
         load : in std_logic;
         data_in : in std_logic_vector(bit_size -1 downto 0);
     -- Main memory part
@@ -129,6 +132,7 @@ component register_unit is
   );
   Port (
     clk : in std_logic;
+    reset : in std_logic;
     load : in std_logic;
     data_in : in std_logic_vector(bit_size -1 downto 0);
     data_out : out std_logic_vector(bit_size -1 downto 0)
@@ -152,6 +156,7 @@ register_unit_instance : register_unit
     Generic map (bit_size => bit_size)
     Port map(
         clk => clk,
+        reset => reset,
         load => load,
         data_in => data_in,
         data_out => internal_data_bus
@@ -188,11 +193,13 @@ entity registered_control_unit is
         data_in : in std_logic_vector(bit_size -1 downto 0);
     -- Control unit part
         -- Input signals
+            reset : in std_logic;
             -- CPU control signals
                 -- Get alu flags for flow control
                 alu_flag_zero : in std_logic;
                 alu_flag_carry : in std_logic;
-        -- Output signals
+         -- Output signals
+            intruction_data : out std_logic_vector(constants.bit_width -1 downto 0);
             -- Main CPU signals
                 soft_reset : out std_logic;
                 halt : out std_logic;
@@ -205,6 +212,8 @@ entity registered_control_unit is
                 ram_write : out std_logic;
                 -- From bus into ram address
                 ram_address : out std_logic;
+                -- From instruction register into bus
+                register_instruction_in : out std_logic;
                 -- From bus into intruction register
                 register_instruction_out : out std_logic;
                 -- From bus into register A
@@ -236,6 +245,7 @@ component register_unit is
   );
   Port (
     clk : in std_logic;
+    reset : in std_logic;
     load : in std_logic;
     data_in : in std_logic_vector(bit_size -1 downto 0);
     data_out : out std_logic_vector(bit_size -1 downto 0)
@@ -246,12 +256,14 @@ component control_unit is
     Port (
     -- Input signals
         clk : in std_logic;
+        reset : in std_logic;
         instruction : in std_logic_vector(constants.bit_width -1 downto 0);
         -- CPU control signals
             -- Get alu flags for flow control
             alu_flag_zero : in std_logic;
             alu_flag_carry : in std_logic;
     -- Output signals
+        intruction_data : out std_logic_vector(constants.bit_width -1 downto 0);
         -- Main CPU signals
             soft_reset : out std_logic;
             halt : out std_logic;
@@ -264,6 +276,8 @@ component control_unit is
             ram_write : out std_logic;
             -- From bus into ram address
             ram_address : out std_logic;
+            -- From instruction register into bus
+            register_instruction_in : out std_logic;
             -- From bus into intruction register
             register_instruction_out : out std_logic;
             -- From bus into register A
@@ -295,6 +309,7 @@ register_unit_instance : register_unit
     Generic map (bit_size => bit_size)
     Port map(
         clk => clk,
+        reset => reset,
         load => load,
         data_in => data_in,
         data_out => internal_data_bus
@@ -304,12 +319,14 @@ control_unit_instance : control_unit
     Port map(
     -- Input signals
         clk => clk,
+        reset => reset,
         instruction => internal_data_bus,
         -- CPU control signals
             -- Get alu flags for flow control
             alu_flag_zero => alu_flag_zero,
             alu_flag_carry => alu_flag_carry,
     -- Output signals
+            intruction_data => intruction_data,
         -- Main CPU signals
             soft_reset => soft_reset,
             halt => halt,
@@ -322,6 +339,8 @@ control_unit_instance : control_unit
             ram_write => ram_write,
             -- From bus into ram address
             ram_address => ram_address,
+            -- From instruction register into bus
+            register_instruction_in => register_instruction_in,
             -- From bus into intruction register
             register_instruction_out => register_instruction_out,
             -- From bus into register A
@@ -361,6 +380,7 @@ entity registered_alu is
     Port(
     -- Register part
         clk : in std_logic;
+        reset : in std_logic;
         load_a : in std_logic;
         register_a : in std_logic_vector(bit_size -1 downto 0);
         register_a_out : out std_logic_vector(bit_size -1 downto 0);
@@ -382,6 +402,7 @@ component register_unit is
   );
   Port (
     clk : in std_logic;
+    reset : in std_logic;
     load : in std_logic;
     data_in : in std_logic_vector(bit_size -1 downto 0);
     data_out : out std_logic_vector(bit_size -1 downto 0)
@@ -402,11 +423,13 @@ end component;
 -- Internal signals
     signal internal_data_a: std_logic_vector(bit_size -1 downto 0);
     signal internal_data_b: std_logic_vector(bit_size -1 downto 0);
+    -- signal internal_data_result: std_logic_vector(bit_size -1 downto 0);
 begin
 register_unit_a_instance : register_unit 
     Generic map (bit_size => bit_size)
     Port map(
         clk => clk,
+        reset => reset,
         load => load_a,
         data_in => register_a,
         data_out => internal_data_a
@@ -416,11 +439,12 @@ register_unit_b_instance : register_unit
     Generic map (bit_size => bit_size)
     Port map(
         clk => clk,
+        reset => reset,
         load => load_b,
         data_in => register_b,
         data_out => internal_data_b
     );
-    
+
 alu_instance : alu 
     Port map(
         substraction => substraction,

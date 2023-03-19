@@ -27,6 +27,7 @@ entity register_unit is
   );
   Port (
     clk : in std_logic;
+    reset : in std_logic;
     load : in std_logic;
     data_in : in std_logic_vector(bit_size -1 downto 0);
     data_out : out std_logic_vector(bit_size -1 downto 0)
@@ -38,12 +39,17 @@ signal data_stored : std_logic_vector(bit_size -1 downto 0);
 begin
 data_out <= data_stored;
 
-data_input_process : process(clk, load)
+data_input_process : process(clk)
+    variable data_process : std_logic_vector(bit_size -1 downto 0);
 begin
-    if falling_edge(clk)
-    then
-        data_stored <= data_in when load;
+    if reset = '1' then
+        data_process := (others => '0');
+    elsif falling_edge(clk) then
+        if load = '1' then
+            data_process := data_in;
+        end if;
     end if;
+    data_stored <= data_process;
 end process;
 
 end Behavioral;
