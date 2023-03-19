@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: None
+-- Engineer: Gugolple
 -- 
 -- Create Date: 03/18/2023 01:47:24 PM
 -- Design Name: 

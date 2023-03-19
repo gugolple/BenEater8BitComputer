@@ -1,16 +1,13 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: None
+-- Engineer: Gugolple
 -- 
 -- Create Date: 03/13/2023 05:07:18 PM
 -- Design Name: 
 -- Module Name: clock_divider - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
+-- Project Name: BenEater8BitComputer
+-- Description: This is a simple clock divider, allowing of the execution of
+--     the processor at a lower speed, for visualization.
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
