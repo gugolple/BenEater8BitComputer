@@ -186,23 +186,7 @@ architecture Behavioral of control_unit is
             -- Remianing states set to 0, not allowing any not defined operations
             others => ( internal => (others => '0'), external => (others => '0'))
         );
-    -- HALT Instruction
-    constant halt_value : integer := 15;
-    constant halt_instruction_control : type_instruction_control :=
-        (
-            --Step 0
-            0 => (
-                internal => (
-                    others => '0'
-                ),
-                external => (
-                    halt => '1',
-                    others => '0'
-                )
-            ),
-            -- Remianing states set to 0, not allowing any not defined operations
-            others => ( internal => (others => '0'), external => (others => '0'))
-        );
+        
     -- LDA Instruction
     constant lda_value : integer := 1;
     constant lda_instruction_control : type_instruction_control :=
@@ -272,8 +256,129 @@ architecture Behavioral of control_unit is
             )
         );
     
+    -- SUB Instruction
+    constant SUB_value : integer := 3;
+    constant SUB_instruction_control : type_instruction_control :=
+        (
+            --Step 0
+            0 => (
+                internal => (
+                    others => '0'
+                ),
+                external => (
+                    register_instruction_in => '1',
+                    ram_address => '1',
+                    others => '0'
+                )
+            ),
+            --Step 1
+            1 => (
+                internal => (
+                    others => '0'
+                ),
+                external => (
+                    ram_in => '1',
+                    register_b_out => '1',
+                    alu_substraction => '1',
+                    others => '0'
+                )
+            ),
+            --Step 2
+            2 => (
+                internal => (
+                    next_instruction => '1'
+                ),
+                external => (
+                    alu_in => '1',
+                    register_a_out => '1',
+                    alu_substraction => '1',
+                    others => '0'
+                )
+            )
+        );
+        
+    
+    -- STA Instruction
+    constant STA_value : integer := 4;
+    constant STA_instruction_control : type_instruction_control :=
+        (
+            --Step 0
+            0 => (
+                internal => (
+                    others => '0'
+                ),
+                external => (
+                    register_instruction_in => '1',
+                    ram_address => '1',
+                    others => '0'
+                )
+            ),
+            --Step 1
+            1 => (
+                internal => (
+                    next_instruction => '1'
+                ),
+                external => (
+                    register_a_in => '1',
+                    ram_write => '1',
+                    others => '0'
+                )
+            ),
+            -- Remianing states set to 0, not allowing any not defined operations
+            others => ( internal => (others => '0'), external => (others => '0'))
+        );
+        
+    -- LDI Instruction
+    constant LDI_value : integer := 5;
+    constant LDI_instruction_control : type_instruction_control :=
+        (
+            --Step 0
+            0 => (
+                internal => (
+                    next_instruction => '1'
+                ),
+                external => (
+                    register_instruction_in => '1',
+                    register_a_out => '1',
+                    others => '0'
+                )
+            ),
+            -- Remianing states set to 0, not allowing any not defined operations
+            others => ( internal => (others => '0'), external => (others => '0'))
+        );
+        
+        
+    -- JMP Instruction
+    constant JMP_value : integer := 6;
+    constant JMP_instruction_control : type_instruction_control :=
+        (
+            --Step 0
+            0 => (
+                internal => (
+                    others => '0'
+                ),
+                external => (
+                    register_instruction_in => '1',
+                    program_counter_out => '1',
+                    others => '0'
+                )
+            ),
+            --Step 1
+            1 => (
+                internal => (
+                    next_instruction => '1'
+                ),
+                external => (
+                    jump => '1',
+                    others => '0'
+                )
+            ),
+            -- Remianing states set to 0, not allowing any not defined operations
+            others => ( internal => (others => '0'), external => (others => '0'))
+        );
+    
     -- OUT Instruction
-    constant OUT_value : integer := 3;
+    constant OUT_value : integer := 14;
     constant OUT_instruction_control : type_instruction_control :=
         (
             --Step 0
@@ -284,6 +389,24 @@ architecture Behavioral of control_unit is
                 external => (
                     register_a_in => '1',
                     register_output_out => '1',
+                    others => '0'
+                )
+            ),
+            -- Remianing states set to 0, not allowing any not defined operations
+            others => ( internal => (others => '0'), external => (others => '0'))
+        );
+        
+    -- HALT Instruction
+    constant halt_value : integer := 15;
+    constant halt_instruction_control : type_instruction_control :=
+        (
+            --Step 0
+            0 => (
+                internal => (
+                    others => '0'
+                ),
+                external => (
+                    halt => '1',
                     others => '0'
                 )
             ),
@@ -309,6 +432,22 @@ architecture Behavioral of control_unit is
             -- ADD
             add_value => (
                 add_instruction_control
+            ),
+            -- SUB
+            sub_value => (
+                sub_instruction_control
+            ),
+            -- STA
+            sta_value => (
+                sta_instruction_control
+            ),
+            -- LDI
+            ldi_value => (
+                ldi_instruction_control
+            ),
+            -- JMP
+            jmp_value => (
+                jmp_instruction_control
             ),
             -- OUT
             out_value => (
